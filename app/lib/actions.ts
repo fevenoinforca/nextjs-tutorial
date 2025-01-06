@@ -104,6 +104,24 @@ export async function deleteInvoice(id: string) {
     }
 }
 
+export async function deleteCustomer(id: string) {
+    if (!id) {
+        throw new Error('Customer ID is required.');
+    }
+
+    try {
+        await sql`DELETE FROM customers WHERE id = ${id}`;
+        revalidatePath('/dashboard/customers');
+        return {
+            message: 'Customer deleted successfully.'
+        }
+    } catch (error) {
+        return {
+            error: 'Database Error: Failed to Delete Customer.'
+        }
+    }
+}
+
 export async function authenticate(
     prevState: string | undefined,
     formData: FormData,

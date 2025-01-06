@@ -187,8 +187,25 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export async function fetchCustomersPages(query: string) {
   try {
+    const count = await sql`SELECT COUNT(*) FROM customers`;
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of customers.');
+  }
+}
+
+export async function fetchFilteredCustomers(query: string, currentPage: number) {
+  try {
+    console.log('Fetching customers data...');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log('Data fetch completed after 1 second.');
+
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
     const data = await sql<CustomersTableType>`
 		SELECT
 		  customers.id,
@@ -202,9 +219,10 @@ export async function fetchFilteredCustomers(query: string) {
 		LEFT JOIN invoices ON customers.id = invoices.customer_id
 		WHERE
 		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
+      customers.email ILIKE ${`%${query}%`}
 		GROUP BY customers.id, customers.name, customers.email, customers.image_url
 		ORDER BY customers.name ASC
+		LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
 	  `;
 
     const customers = data.rows.map((customer) => ({
