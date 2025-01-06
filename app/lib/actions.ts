@@ -20,14 +20,21 @@ export async function createInvoice(formData: FormData) {
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
-      });
-      const amountInCents = amount * 100;
-      const date = new Date().toISOString().split('T')[0];
+    });
+    const amountInCents = amount * 100;
+    const date = new Date().toISOString().split('T')[0];
+    
+    try {
+        await sql`INSERT INTO invoices (customer_id, amount, status, date) VALUES (${customerId}, ${amountInCents}, ${status}, ${date})`;
 
-      await sql`INSERT INTO invoices (customer_id, amount, status, date) VALUES (${customerId}, ${amountInCents}, ${status}, ${date})`;
+    } catch (error) {
+        return {
+            error: 'Database Error: Failed to Create Invoice.'
+        }
+    }
 
-      revalidatePath('/dashboard/invoices');
-      redirect('/dashboard/invoices');
+    revalidatePath('/dashboard/invoices');
+    redirect('/dashboard/invoices');
 }
 
 export async function updateInvoice(id: string, formData: FormData) {
@@ -35,14 +42,33 @@ export async function updateInvoice(id: string, formData: FormData) {
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
-      });
-      const amountInCents = amount * 100;
+    });
+    const amountInCents = amount * 100;
+
+    try {
       await sql`UPDATE invoices SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status} WHERE id = ${id}`;
-      revalidatePath('/dashboard/invoices');
-      redirect('/dashboard/invoices');
+    } catch (error) {
+        return {
+            error: 'Database Error: Failed to Update Invoice.'
+        }
+    }
+
+    revalidatePath('/dashboard/invoices');
+    redirect('/dashboard/invoices');
 }
 
 export async function deleteInvoice(id: string) {
-    await sql`DELETE FROM invoices WHERE id = ${id}`;
-    revalidatePath('/dashboard/invoices');
+    throw new Error('Something went wrong...');
+
+    try {   
+        await sql`DELETE FROM invoices WHERE id = ${id}`;
+        revalidatePath('/dashboard/invoices');
+        return {
+            message: 'Invoice deleted successfully.'
+        }
+    } catch (error) {
+        return {
+            error: 'Database Error: Failed to Delete Invoice.'
+        }
+    }
 }
