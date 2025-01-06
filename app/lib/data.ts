@@ -187,7 +187,7 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchCustomersPages(query: string) {
+export async function fetchCustomersPages() {
   try {
     const count = await sql`SELECT COUNT(*) FROM customers`;
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);

@@ -49,7 +49,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
 
     } catch (error) {
         return {
-            error: 'Database Error: Failed to Create Invoice.'
+            error: 'Database Error: Failed to Create Invoice.' + error
         }
     }
 
@@ -78,7 +78,7 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
       await sql`UPDATE invoices SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status} WHERE id = ${id}`;
     } catch (error) {
         return {
-            error: 'Database Error: Failed to Update Invoice.'
+            error: 'Database Error: Failed to Update Invoice.' + error
         }
     }
 
@@ -99,7 +99,7 @@ export async function deleteInvoice(id: string) {
         }
     } catch (error) {
         return {
-            error: 'Database Error: Failed to Delete Invoice.'
+            error: 'Database Error: Failed to Delete Invoice.' + error
         }
     }
 }
@@ -117,7 +117,7 @@ export async function deleteCustomer(id: string) {
         }
     } catch (error) {
         return {
-            error: 'Database Error: Failed to Delete Customer.'
+            error: 'Database Error: Failed to Delete Customer.' + error
         }
     }
 }
