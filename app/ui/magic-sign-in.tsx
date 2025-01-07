@@ -18,7 +18,7 @@ export function SignIn() {
                     <label
                         className="mb-3 mt-5 block text-xs font-medium text-gray-900"
                         htmlFor="email"
-                        >
+                    >
                         Email
                     </label>
                     <div className="relative">
@@ -34,7 +34,7 @@ export function SignIn() {
                     </div>
                 </div>
                 <Button className="mt-4 w-full" aria-disabled={isPending}>
-                    Sign in with Resend <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+                    Send me an activation email <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                 </Button>
             </div>
         </form>
