@@ -3,7 +3,7 @@ import { SignIn } from '@/app/ui/magic-sign-in';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Magic Sign In',
+  title: 'Sign In',
 };
  
 export default function LoginPage() {

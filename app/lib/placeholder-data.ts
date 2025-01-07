@@ -7,7 +7,7 @@ const users = [
     name: 'Frederic Eveno',
     email: 'f.eveno@inforca.mc',
     emailVerified: new Date(0).toISOString(),
-    image: '/fredeveno.png',
+    image: '/fredeveno.jpg',
   },
 ];
 

@@ -34,7 +34,7 @@ export function SignIn() {
                     </div>
                 </div>
                 <Button className="mt-4 w-full" aria-disabled={isPending}>
-                    Send me an activation email <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+                    Sign in with email authentication <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                 </Button>
             </div>
         </form>
