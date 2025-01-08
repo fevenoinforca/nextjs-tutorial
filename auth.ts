@@ -2,7 +2,7 @@ import NextAuth from "next-auth"
 import Resend from "next-auth/providers/resend"
 import PostgresAdapter from "@auth/pg-adapter"
 import { Pool } from "@neondatabase/serverless"
-import next from "next"
+import Google from "next-auth/providers/google"
  
 export const { handlers, auth, signIn, signOut } = NextAuth(() => {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL })
@@ -13,6 +13,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
           apiKey: process.env.AUTH_RESEND_KEY,
           from: "no-reply@mail-resend-inforca.ddns-ip.net"
         }),
+        Google
     ],
     adapter: PostgresAdapter(pool),
     pages: {
@@ -28,15 +29,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
         } else if (isLoggedIn) {
           if (nextUrl.pathname.startsWith('/sign-in')) {
             const callbackUrl = nextUrl.search?.split('callbackUrl=')[1]
-            if (callbackUrl.includes('dashboard')) {
-                return Response.redirect(new URL("/dashboard", nextUrl)) // Redirect to dashboard if callbackUrl includes dashboard (resend email)
+            if (callbackUrl?.includes('dashboard')) {
+                return Response.redirect(new URL("/dashboard", nextUrl)) // Redirect to dashboard if logged in and callbackUrl includes dashboard
             }
-            return true;
           }
           return true;
         }
         return true;
       },
     },
+    debug: false,
   }
 })

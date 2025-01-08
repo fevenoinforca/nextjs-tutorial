@@ -1,20 +1,20 @@
+import React from 'react';
 import { signIn } from "@/auth"
 import { Button } from "./button"
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import { AtSymbolIcon } from '@heroicons/react/24/outline'
- 
-export function SignIn() {
-    const isPending = false
-
+import Image from 'next/image'
+export function MagicSignIn() {
     return (
-        <form
-            action={async (formData) => {
-                'use server'
-                await signIn("resend", formData)
-            }}
+        <div>
+            <form
+                action={async (formData) => {
+                    'use server'
+                    await signIn("resend", formData)
+                }}
         >
             <div className="flex flex-col gap-2">
-                <div>
+                <div className="w-full">
                     <label
                         className="mb-3 mt-5 block text-xs font-medium text-gray-900"
                         htmlFor="email"
@@ -33,10 +33,26 @@ export function SignIn() {
                         <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                     </div>
                 </div>
-                <Button className="mt-4 w-full" aria-disabled={isPending}>
-                    Sign in with email authentication <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+                <Button className="mt-4 w-full">
+                    Sign in with my own email <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                 </Button>
             </div>
         </form>
+
+        <div className="my-8 h-[2px] w-full bg-gray-200"></div>
+
+        <form
+            action={async () => {
+                "use server"
+                await signIn("google")
+            }}
+            >
+                <p className="text-center text-md text-gray-500">OR :</p>
+                <Button className="mt-4 w-full">
+                    Signin with Google account <Image src="https://authjs.dev/img/providers/google.svg" alt="Google" width={20} height={20} className="ml-auto h-5 w-5 text-gray-50" />
+                </Button>
+            </form>
+
+        </div>
     )
 }

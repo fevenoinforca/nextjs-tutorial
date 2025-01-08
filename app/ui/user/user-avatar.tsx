@@ -4,12 +4,11 @@ export default async function UserAvatar() {
   const session = await auth()
  
   if (!session?.user) return null
-  console.log(session.user)
  
   return (
     <div className="flex flex-row items-center gap-2">
       <Image
-        src={session.user.image || "/users/default-avatar.webp"}
+        src={session?.user?.image || "/users/default-avatar.webp"}
         alt="User Avatar"
         width={28}
         height={28}
