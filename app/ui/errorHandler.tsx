@@ -15,6 +15,9 @@ export function ErrorHandler() {
         case "OAuthAccountNotLinked":
             errorMessage = "Another account probably exists with the same e-mail address. Try to connect with your own e-mail."
             break
+        case "Unauthorized-User":
+            errorMessage = "You are not authorized to use this service."
+            break
         default:
             errorMessage = ""
             break
@@ -22,8 +25,8 @@ export function ErrorHandler() {
 
     useEffect(() => {
        if (errorMessage) {
-        toast.error(error + ": " + errorMessage)
-        router.push("/")
+           toast.error(error + ": " + errorMessage)
+           router.push("/")
        }
     }, [error])
 

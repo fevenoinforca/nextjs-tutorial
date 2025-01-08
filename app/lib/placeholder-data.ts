@@ -4,10 +4,11 @@
 const users = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'Frederic Eveno',
+    role: 'admin',
+    name: 'Admin User',
     email: 'f.eveno@inforca.mc',
-    emailVerified: new Date(0).toISOString(),
-    image: '/fredeveno.jpg',
+    emailVerified: new Date().toISOString(),
+    image: '/users/admin.webp',
   },
 ];
 

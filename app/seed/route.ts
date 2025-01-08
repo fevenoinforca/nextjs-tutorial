@@ -43,10 +43,22 @@ async function seedUsers() {
     );
   `;
 
+  // Check if user_role type exists before creating it
+  const userRoleExists = await client.sql`
+    SELECT 1 FROM pg_type WHERE typname = 'user_role';
+  `;
+
+  if (userRoleExists.rowCount === 0) {
+    await client.sql`
+      CREATE TYPE user_role AS ENUM ('admin', 'user');
+    `;
+  }
+
   // Create users table
   await client.sql`
     CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      role user_role DEFAULT 'user',
       name VARCHAR(255),
       email VARCHAR(255),
       "emailVerified" TIMESTAMPTZ,
@@ -58,8 +70,8 @@ async function seedUsers() {
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
       return client.sql`
-        INSERT INTO users (id, name, email, "emailVerified", image)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${user.emailVerified}, ${user.image})
+        INSERT INTO users (id, role, name, email, "emailVerified", image)
+        VALUES (${user.id}, ${user.role}, ${user.name}, ${user.email}, ${user.emailVerified}, ${user.image})
         ON CONFLICT (id) DO NOTHING;
       `;
     }),

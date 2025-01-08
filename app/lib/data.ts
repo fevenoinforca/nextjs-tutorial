@@ -6,6 +6,7 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
+  User,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -236,4 +237,9 @@ export async function fetchFilteredCustomers(query: string, currentPage: number)
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
   }
+}
+
+export async function checkUserByEmail(email: string) {
+  const data = await sql<User>`SELECT * FROM users WHERE email = ${email} LIMIT 1`;
+  return data.rows;
 }

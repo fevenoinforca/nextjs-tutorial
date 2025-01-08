@@ -8,6 +8,7 @@ export async function GET() {
         await Promise.all([
             client.sql`DROP EXTENSION IF EXISTS "uuid-ossp" CASCADE`,
             client.sql`DROP TABLE IF EXISTS "users" CASCADE`,
+            client.sql`DROP TYPE IF EXISTS user_role CASCADE`,
             client.sql`DROP TABLE IF EXISTS "verification_token" CASCADE`,
             client.sql`DROP TABLE IF EXISTS "accounts" CASCADE`,
             client.sql`DROP TABLE IF EXISTS "sessions" CASCADE`,
