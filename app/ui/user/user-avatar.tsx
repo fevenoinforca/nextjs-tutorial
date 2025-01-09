@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import { Cog6ToothIcon } from "@heroicons/react/24/outline"
+import { Cog6ToothIcon, PencilIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import Link from "next/link"
 export default async function UserAvatar() {
@@ -7,6 +7,8 @@ export default async function UserAvatar() {
  
   if (!session?.user) return null
   const isAdmin = session?.user?.role === "admin"
+  const isUser = session?.user?.role === "user"
+  const userId = session?.user?.id
  
   return (
     <div className="flex flex-row items-center justify-between gap-2">
@@ -23,6 +25,11 @@ export default async function UserAvatar() {
       {isAdmin && (
         <Link href="/dashboard/users">
           <Cog6ToothIcon className="w-6" />
+        </Link>
+      )}
+      {isUser && (
+        <Link href={`/dashboard/users/${userId}/edit`}>
+          <PencilIcon className="w-6 p-1 mr-2" />
         </Link>
       )}
     </div>

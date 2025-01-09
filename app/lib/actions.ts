@@ -135,7 +135,7 @@ export async function createUser(prevState: State, formData: FormData) {
 
 export async function updateUser(id: string, prevState: State, formData: FormData) {
     const validatedFields = ValidateCreateUser.safeParse({
-        role: formData.get('role'),
+        role: formData.get('role') || "user",
         name: formData.get('name'),
         email: formData.get('email'),
         image: formData.get('image'),
@@ -159,7 +159,11 @@ export async function updateUser(id: string, prevState: State, formData: FormDat
     }
 
     revalidatePath('/dashboard/users');
-    redirect('/dashboard/users');
+    if (role === "admin") {
+        redirect('/dashboard/users');
+    } else {
+        redirect('/dashboard');
+    }
 }
 
 export async function deleteInvoice(id: string) {
