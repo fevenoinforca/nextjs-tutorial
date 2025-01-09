@@ -16,12 +16,10 @@ export function MagicSignIn() {
 
                     const inputEmail = formData.get('email')
                     // First check if the user exists in the database
-                    const user = await checkUserByEmail(inputEmail as string)  
-                    console.log(user)
+                    const user = await checkUserByEmail(inputEmail as string)
                     if (user && user.length > 0 && user[0].email === inputEmail) {
                         await signIn("resend", formData)
                     } else {
-                        console.log("User not found")
                         return redirect("/?error=Unauthorized-User")
                     }
                 }}

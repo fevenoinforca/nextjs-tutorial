@@ -243,3 +243,39 @@ export async function checkUserByEmail(email: string) {
   const data = await sql<User>`SELECT * FROM users WHERE email = ${email} LIMIT 1`;
   return data.rows;
 }
+
+export async function fetchUsersPages() {
+  try {
+    console.log('Fetching users data...');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log('Data fetch completed after 1 second.');
+
+    const count = await sql`SELECT COUNT(*) FROM users`;
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of users.');
+  }
+}
+
+export async function fetchUsers() {
+  const data = await sql<User>`SELECT * FROM users`;
+  return data.rows;
+}
+
+export async function fetchFilteredUsers(query: string, currentPage: number) {
+  try {
+    console.log('Fetching users data...');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log('Data fetch completed after 1 second.');
+
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+    const data = await sql<User>`SELECT * FROM users WHERE name ILIKE ${`%${query}%`} OR email ILIKE ${`%${query}%`} ORDER BY name ASC LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch users.');
+  }
+}

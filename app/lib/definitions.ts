@@ -8,6 +8,7 @@ export type User = {
   email: string;
   emailVerified: Date;
   image: string;
+  role: string;
 };
 
 export type Customer = {

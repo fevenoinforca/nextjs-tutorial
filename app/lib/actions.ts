@@ -7,15 +7,23 @@ import { z } from 'zod';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
-const FormSchema = z.object({
+const InvoiceFormSchema = z.object({
     id: z.string(),
     customerId: z.string({ invalid_type_error: 'Please select a customer.' }),
     amount: z.coerce.number().gt(0, { message: 'Please enter an amount greater than $0.' }),
     status: z.enum(['pending', 'paid'], { invalid_type_error: 'Please select an invoice status.' }),
     date: z.string(),
   });
+
+const UserFormSchema = z.object({
+    id: z.string(),
+    name: z.string({ invalid_type_error: 'Please enter a name.' }),
+    email: z.string({ invalid_type_error: 'Please enter an email.' }).email('Invalid email address.'),
+    role: z.string({ invalid_type_error: 'Please select a role.' }),
+  });
    
-const ValidateCreateInvoice = FormSchema.omit({ id: true, date: true });
+const ValidateCreateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
+const ValidateCreateUser = UserFormSchema.omit({ id: true });
 
 export type State = {
     errors?: {
@@ -85,6 +93,40 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
 }
+export async function createUser(prevState: State, formData: FormData) {
+    const validatedFields = ValidateCreateUser.safeParse({
+        role: formData.get('role'),
+        name: formData.get('name'),
+        email: formData.get('email'),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Check your inputs and try again.',
+        };
+    }
+
+    const { name, email, role } = validatedFields.data;
+
+    try {
+        await sql`INSERT INTO users (name, email, role) VALUES (${name}, ${email}, ${role})`;
+    } catch (error) {
+        return {
+            error: 'Database Error: Failed to Create User.' + error
+        }
+    }
+
+    revalidatePath('/dashboard/users');
+    redirect('/dashboard/users');
+}
+
+export async function updateUser(id: string, prevState: State, formData: FormData) {
+    console.log(formData)
+    return {
+        message: 'User updated successfully.'
+    }
+}
 
 export async function deleteInvoice(id: string) {
     if (!id) {
@@ -122,21 +164,39 @@ export async function deleteCustomer(id: string) {
     }
 }
 
+export async function deleteUser(id: string) {
+    if (!id) {
+        throw new Error('User ID is required.');
+    }
+
+    try {
+        await sql`DELETE FROM users WHERE id = ${id}`;
+        revalidatePath('/dashboard/users');
+        return {
+            message: 'User deleted successfully.'
+        }
+    } catch (error) {
+        return {
+            error: 'Database Error: Failed to Delete User.' + error
+        }
+    }
+}
+
 export async function authenticate(
     prevState: string | undefined,
     formData: FormData,
-  ) {
+) {
     try {
-      await signIn('credentials', formData);
+        await signIn('credentials', formData);
     } catch (error) {
-      if (error instanceof AuthError) {
-        switch (error.type) {
-          case 'CredentialsSignin':
-            return 'Invalid credentials.';
-          default:
-            return 'Something went wrong.';
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case 'CredentialsSignin':
+                return 'Invalid credentials.';
+                default:
+                return 'Something went wrong.';
+            }
         }
-      }
-      throw error;
+        throw error;
     }
-  }
+}
