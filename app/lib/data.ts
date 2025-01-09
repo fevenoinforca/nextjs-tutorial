@@ -15,12 +15,12 @@ export async function fetchRevenue() {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
 
-    console.log('Fetching revenue data...');
+    console.warn('Fetching revenue data...');
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
-    console.log('Data fetch completed after 3 seconds.');
+    console.warn('Data fetch completed after 3 seconds.');
 
     return data.rows;
   } catch (error) {
@@ -31,7 +31,7 @@ export async function fetchRevenue() {
 
 export async function fetchLatestInvoices() {
   try {
-    console.log('Fetching revenue data...');
+    console.warn('Fetching revenue data...');
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     const data = await sql<LatestInvoiceRaw>`
@@ -41,7 +41,7 @@ export async function fetchLatestInvoices() {
       ORDER BY invoices.date DESC
       LIMIT 5`;
 
-    console.log('Data fetch completed after 1.5 seconds.');
+    console.warn('Data fetch completed after 1.5 seconds.');
     const latestInvoices = data.rows.map((invoice) => ({
       ...invoice,
       amount: formatCurrency(invoice.amount),
@@ -201,9 +201,9 @@ export async function fetchCustomersPages() {
 
 export async function fetchFilteredCustomers(query: string, currentPage: number) {
   try {
-    console.log('Fetching customers data...');
+    console.warn('Fetching customers data...');
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Data fetch completed after 1 second.');
+    console.warn('Data fetch completed after 1 second.');
 
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -244,11 +244,21 @@ export async function checkUserByEmail(email: string) {
   return data.rows;
 }
 
+export async function fetchUserById(id: string) {
+  try {
+    const data = await sql<User>`SELECT * FROM users WHERE id = ${id} LIMIT 1`;
+    return data.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
+
 export async function fetchUsersPages() {
   try {
-    console.log('Fetching users data...');
+    console.warn('Fetching users data...');
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Data fetch completed after 1 second.');
+    console.warn('Data fetch completed after 1 second.');
 
     const count = await sql`SELECT COUNT(*) FROM users`;
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
@@ -266,9 +276,9 @@ export async function fetchUsers() {
 
 export async function fetchFilteredUsers(query: string, currentPage: number) {
   try {
-    console.log('Fetching users data...');
+    console.warn('Fetching users data...');
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Data fetch completed after 1 second.');
+    console.warn('Data fetch completed after 1 second.');
 
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 

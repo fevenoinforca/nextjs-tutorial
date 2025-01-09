@@ -17,21 +17,31 @@ const InvoiceFormSchema = z.object({
 
 const UserFormSchema = z.object({
     id: z.string(),
-    name: z.string({ invalid_type_error: 'Please enter a name.' }),
+    name: z.string({ invalid_type_error: 'Please enter a name.' }).min(1, { message: 'Please enter a name.' }),
     email: z.string({ invalid_type_error: 'Please enter an email.' }).email('Invalid email address.'),
     role: z.string({ invalid_type_error: 'Please select a role.' }),
+    image: z.string().optional(),
   });
    
 const ValidateCreateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
 const ValidateCreateUser = UserFormSchema.omit({ id: true });
 
 export type State = {
-    errors?: {
-        customerId?: string[];
-        amount?: string[];
-        status?: string[];
-    };
-    message?: string | null;
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+    role?: string[];
+    name?: string[];
+    email?: string[];
+    image?: string[];
+  };
+  message: string;
+  error?: string;
+} | {
+  error: string;
+  errors?: undefined;
+  message?: undefined;
 };
 
 export async function createInvoice(prevState: State, formData: FormData) {
@@ -93,11 +103,13 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
 }
+
 export async function createUser(prevState: State, formData: FormData) {
     const validatedFields = ValidateCreateUser.safeParse({
         role: formData.get('role'),
         name: formData.get('name'),
         email: formData.get('email'),
+        image: formData.get('image'),
     });
 
     if (!validatedFields.success) {
@@ -107,10 +119,10 @@ export async function createUser(prevState: State, formData: FormData) {
         };
     }
 
-    const { name, email, role } = validatedFields.data;
+    const { name, email, role, image } = validatedFields.data;
 
     try {
-        await sql`INSERT INTO users (name, email, role) VALUES (${name}, ${email}, ${role})`;
+        await sql`INSERT INTO users (name, email, role, image) VALUES (${name}, ${email}, ${role}, ${image})`;
     } catch (error) {
         return {
             error: 'Database Error: Failed to Create User.' + error
@@ -122,10 +134,32 @@ export async function createUser(prevState: State, formData: FormData) {
 }
 
 export async function updateUser(id: string, prevState: State, formData: FormData) {
-    console.log(formData)
-    return {
-        message: 'User updated successfully.'
+    const validatedFields = ValidateCreateUser.safeParse({
+        role: formData.get('role'),
+        name: formData.get('name'),
+        email: formData.get('email'),
+        image: formData.get('image'),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Check your inputs and try again.',
+        };
     }
+
+    const { role, name, email, image } = validatedFields.data;
+
+    try {
+        await sql`UPDATE users SET role = ${role}, name = ${name}, email = ${email}, image = ${image} WHERE id = ${id}`;
+    } catch (error) {
+        return {
+            error: 'Database Error: Failed to Update User.' + error
+        }
+    }
+
+    revalidatePath('/dashboard/users');
+    redirect('/dashboard/users');
 }
 
 export async function deleteInvoice(id: string) {
