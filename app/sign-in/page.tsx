@@ -1,17 +1,17 @@
-import AcmeLogo from '@/app/ui/acme-logo';
-import { MagicSignIn } from '@/app/ui/magic-sign-in';
-import { Metadata } from 'next';
-import { showToast } from '../ui/toastProvider';
-import Link from 'next/link';
+import AcmeLogo from '@/app/ui/acme-logo'
+import { MagicSignIn } from '@/app/ui/magic-sign-in'
+import { Metadata } from 'next'
+import { showToast } from '../ui/toastProvider'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Sign In',
 };
  
 export default function SignInPage() {
-  const handleSignInError = () => {
-    showToast("Erreur lors de la connexion", "error");
-  };
+  // const handleSignInError = () => {
+  //   showToast("Erreur lors de la connexion", "error")
+  // }
   
   return (
     <main className="flex items-center justify-center md:h-screen">

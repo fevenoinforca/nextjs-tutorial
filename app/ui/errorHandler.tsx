@@ -28,7 +28,7 @@ export function ErrorHandler() {
            toast.error(error + ": " + errorMessage)
            router.push("/")
        }
-    }, [error])
+    }, [error, errorMessage, router])
 
     return null
 }

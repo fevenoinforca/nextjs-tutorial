@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { State, updateUser } from '@/app/lib/actions';
+import { updateUser } from '@/app/lib/actions';
 import { useActionState, useEffect } from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
@@ -44,7 +44,7 @@ export default function EditInvoiceForm({
     if (uploadedImage && uploadedFile) {
       handleImageUpload(uploadedFile);
     }
-  }, [uploadedImage, uploadedFile]);
+  }, [uploadedImage, uploadedFile, handleImageUpload]);
 
   // Function to handle file upload
   const handleImageUpload = async (file: File) => {
