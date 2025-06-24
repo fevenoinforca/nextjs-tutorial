@@ -11,7 +11,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
     providers: [
       Resend({
           apiKey: process.env.AUTH_RESEND_KEY,
-          from: "no-reply@mail-resend-inforca.ddns-ip.net"
+          from: "no-reply@laboitedetestinforca.ip-ddns.com"
         }),
         Google
     ],

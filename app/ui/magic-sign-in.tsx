@@ -52,7 +52,7 @@ export function MagicSignIn() {
 
             {/* OAuth sigin is not enabled in a controlled access context */}
 
-            {/* <div className="my-8 h-[2px] w-full bg-gray-200"></div>
+            <div className="my-8 h-[2px] w-full bg-gray-200"></div>
 
             <form
                 action={async () => {
@@ -64,7 +64,7 @@ export function MagicSignIn() {
                 <Button className="mt-4 w-full">
                     Signin with Google account <Image src="https://authjs.dev/img/providers/google.svg" alt="Google" width={20} height={20} className="ml-auto h-5 w-5 text-gray-50" />
                 </Button>
-            </form> */}
+            </form>
 
         </div>
     )
