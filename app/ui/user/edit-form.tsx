@@ -38,13 +38,7 @@ export default function EditInvoiceForm({
     if (shouldReload) {
       window.location.reload();
     }
-  }, [shouldReload]);
-
-  useEffect(() => {
-    if (uploadedImage && uploadedFile) {
-      handleImageUpload(uploadedFile);
-    }
-  }, [uploadedImage, uploadedFile, handleImageUpload]);
+  }, [shouldReload])
 
   // Function to handle file upload
   const handleImageUpload = async (file: File) => {
@@ -71,7 +65,14 @@ export default function EditInvoiceForm({
     } catch (error) {
       console.error('Error uploading file:', error);
     }
-  };
+  }
+
+  useEffect(() => {
+    if (uploadedImage && uploadedFile) {
+      handleImageUpload(uploadedFile);
+    }
+  }, [uploadedImage, uploadedFile, handleImageUpload])
+
 
   return (
     <form action={formAction}>

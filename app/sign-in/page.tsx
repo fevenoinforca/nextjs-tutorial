@@ -1,7 +1,7 @@
 import AcmeLogo from '@/app/ui/acme-logo'
 import { MagicSignIn } from '@/app/ui/magic-sign-in'
 import { Metadata } from 'next'
-import { showToast } from '../ui/toastProvider'
+// import { showToast } from '../ui/toastProvider'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
