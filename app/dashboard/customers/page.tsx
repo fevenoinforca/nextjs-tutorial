@@ -28,14 +28,18 @@ export default async function Page(props: { searchParams?: Promise<{
                 <h1 className={`${lusitana.className} text-2xl`}>Customers</h1>
             </div>
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-                <Search placeholder="Search customers..." />
+                <Suspense fallback={<div className="h-10 w-64 rounded-md bg-gray-200 animate-pulse" />}>
+                    <Search placeholder="Search customers..." />
+                </Suspense>
                 <CreateCustomer />
             </div>
             <Suspense key={query + currentPage} fallback={<CustomersTableSkeleton />}>
                 <CustomersTable query={query} currentPage={currentPage} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
-                <Pagination totalPages={totalPages} />
+                <Suspense fallback={<div className="h-10 w-64 rounded-md bg-gray-200 animate-pulse" />}>
+                    <Pagination totalPages={totalPages} />
+                </Suspense>
             </div>
         </div>
     );

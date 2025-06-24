@@ -4,6 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Metadata } from 'next';
 import { ToastProvider } from './ui/toastProvider';
 import { ErrorHandler } from './ui/errorHandler';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: {
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        <ErrorHandler />
+        <Suspense fallback={null}>
+          <ErrorHandler />
+        </Suspense>
         <ToastProvider />
         <SpeedInsights />
         {children}
